@@ -51,7 +51,8 @@ public:
 
     void Update(float deltaTime); 
     void Move(float deltaTime); 
-    void Eat(float energy); 
+    void Eat(float energy);
+    void die(); 
     bool CanReproduce() const; 
     std::unique_ptr<Entity> Reproduce(); 
     void ApplyForce(Vector2D force); 

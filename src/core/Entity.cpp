@@ -107,6 +107,11 @@ void Entity::Move(float deltaTime) {
         mEnergy = mMaxEnergy; 
          std::cout << "🍽 " << name << " mange et gagne " << energy << " énergie" << std::endl;
     }
+
+     void Entity::die()
+     {
+        mEnergy =0.0f;
+     } 
     
     // CONSOMMATION D'ÉNERGIE 
 
@@ -210,6 +215,32 @@ void Entity::Render(SDL_Renderer* renderer) const {
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); 
         SDL_RenderFillRect(renderer, &energyBar); 
     }
- } 
+ }
+
+ Vector2D Entity::SeekFood(const std::vector<Food>& foodSources) const {
+    Vector2D herbiPos = position;
+    Vector2D foodPos;
+    float distMin = 5000.0f;
+    float dist;
+    for (auto& food : foodSources) {
+        dist = herbiPos.Distance(food.position);
+        if (distMin > dist && dist <= 300.0f) {
+            distMin = dist;
+            foodPos = food.position;
+        }
+    }
+    herbiPos = {foodPos.x - herbiPos.x , foodPos.y - herbiPos.y};
+    float length = std::sqrt(herbiPos.x * herbiPos.x + herbiPos.y * herbiPos.y);
+    herbiPos.x /= length;
+    herbiPos.y /= length;
+    return herbiPos;
+ }
+
+ void Entity::ApplyForce(Vector2D force) {
+    mVelocity = mVelocity + force;
+    float length = std::sqrt(mVelocity.x * mVelocity.x + mVelocity.y * mVelocity.y);
+    mVelocity.x /= length;
+    mVelocity.y /= length;
+ }
 } // namespace Core 
 } // namespace Ecosystem

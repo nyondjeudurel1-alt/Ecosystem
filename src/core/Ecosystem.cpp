@@ -122,7 +122,45 @@ void Ecosystem::HandleReproduction() {
 void Ecosystem::HandleEating() { 
     
     // Ici on implémenterait la logique de recherche de nourriture 
+            for (auto& entities : mEntities)
+            {
+                if (entities->GetType() == EntityType::CARNIVORE)
+               
+                for (std::unique_ptr<Entity>& proie : mEntities)
+                {
+                    if (proie->GetType() ==EntityType::HERBIVORE )
+                    {
+                        float dist =entities->position.Distance(proie->position);
+                        if (dist<=3.0f)
+                        {
+                            entities->Eat(proie->GetEnergy());
+                           proie->die();
+                        }
+                    }
+                }
+                
+                
+            }
 
+            for (auto& entities : mEntities)
+            {
+                if (entities->GetType() == EntityType::HERBIVORE) 
+                {
+                    if (entities->GetEnergy() < 70.0f) {
+                        entities->ApplyForce(entities->SeekFood(mFoodSources));
+                        entities->position = entities->position + entities->GetVelocity() * 0.5f;
+                    }
+                for (auto& food : mFoodSources)
+                {
+                float dist =entities->position.Distance(food.position);
+                if (dist<=4.0f)
+                {
+                    entities->Eat(25.0f);
+                   food.energyValue = 0.0f;
+                }
+                }
+                }
+            }
 
     // Pour l'instant, gestion simplifiée
 
